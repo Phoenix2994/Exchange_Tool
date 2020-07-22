@@ -24,3 +24,12 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+.player {
+    text-align: center;
+    .mat-form-field{
+        width: 40%;
+        margin-right:10px;
+    }
+}

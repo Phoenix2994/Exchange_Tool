@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Aggiungi giocatore</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="player">
+    <mat-form-field style="display:block; margin:auto" appearance="fill">
+      <mat-label>Valore</mat-label>
+      <input [(ngModel)]="value" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Quotazione iniziale</mat-label>
+      <input [(ngModel)]="quot" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Quotazione finale</mat-label>
+      <input [(ngModel)]="finalQuot" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Contratto</mat-label>
+      <mat-select [(ngModel)]="contractType">
+        <mat-option value="def">Definitivo</mat-option>
+        <mat-option value="lend">Prestito</mat-option>
+        <mat-option value="lendO">Prestito (obbligo)</mat-option>
+        <mat-option value="lendR">Prestito (diritto)</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="contractType != 'def'" appearance="fill">
+      <mat-label>Durata</mat-label>
+      <mat-select [(ngModel)]="contractLength">
+        <mat-option value="12">12</mat-option>
+        <mat-option value="9">9</mat-option>
+        <mat-option value="6">6</mat-option>
+        <mat-option value="3">3</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="contractType == 'lendR' || contractType == 'lendO' " appearance="fill">
+      <mat-label>Riscatto</mat-label>
+      <mat-select [(ngModel)]="repaid">
+        <mat-option value="yes">Sì</mat-option>
+        <mat-option *ngIf="contractType == 'lendR'" value="no">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="contractType == 'lendR' || contractType == 'lendO'" appearance="fill">
+      <mat-label>Cifra Riscatto</mat-label>
+      <input [(ngModel)]="repaidValue" matInput>
+    </mat-form-field>
+    <mat-form-field style="display:block; margin:auto" appearance="fill">
+      <mat-label>Bonus</mat-label>
+      <mat-select [(ngModel)]="bonus">
+        <mat-option value="0">0</mat-option>
+        <mat-option value="1">1</mat-option>
+        <mat-option value="2">2</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="bonus != '0'" appearance="fill">
+      <mat-label>No. Eventi Bonus 1</mat-label>
+      <input [(ngModel)]="bonus1Number" matInput>
+    </mat-form-field>
+    <mat-form-field *ngIf="bonus != '0'" appearance="fill">
+      <mat-label>Ricompensa Bonus 1</mat-label>
+      <input [(ngModel)]="bonus1Reward" matInput>
+    </mat-form-field>
+    <mat-form-field *ngIf="bonus == '2'" appearance="fill">
+      <mat-label>No. Eventi Bonus 2</mat-label>
+      <input [(ngModel)]="bonus2Number" matInput>
+    </mat-form-field>
+    <mat-form-field *ngIf="bonus == '2'" appearance="fill">
+      <mat-label>Ricompensa Bonus 2</mat-label>
+      <input [(ngModel)]="bonus2Reward" matInput>
+    </mat-form-field>
+    <button mat-button color="primary" (click)="save()">Salva</button>
+  </div>
+</ion-content>
