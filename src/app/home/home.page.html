@@ -16,7 +16,8 @@
   <div class="container">
     <mat-tab-group>
       <mat-tab label="Squadra 1">
-        <table #firstTeamTable mat-table [dataSource]="firstTeam" class="mat-elevation-z8 table">
+        <p style="margin-top:20px">Valori Iniziali</p>
+        <table #firstTeamTable mat-table [dataSource]="firstTeam" class="mat-elevation-z8">
           <ng-container matColumnDef="position">
             <th mat-header-cell *matHeaderCellDef> No. Giocatore </th>
             <td mat-cell *matCellDef="let element; let i = index"> Giocatore {{i+1}} </td>
@@ -43,6 +44,8 @@
         </mat-form-field>
         <button mat-button color="primary" routerLink="/team/1/player">Aggiungi Giocatore</button>
 
+        <p>Valori Finali</p>
+
         <table #finalFirstTeamTable mat-table [dataSource]="firstTeamValues" class="mat-elevation-z8">
 
           <ng-container matColumnDef="position">
@@ -61,7 +64,9 @@
 
       </mat-tab>
       <mat-tab label="Squadra 2">
-        <table #secondTeamTable mat-table [dataSource]="secondTeam" class="mat-elevation-z8 table">
+        <p style="margin-top:20px">Valori Iniziali</p>
+
+        <table #secondTeamTable mat-table [dataSource]="secondTeam" class="mat-elevation-z8">
 
           <ng-container matColumnDef="position">
             <th mat-header-cell *matHeaderCellDef> No. </th>
@@ -88,6 +93,7 @@
           <input (change)="setSecondExtra()" [(ngModel)]="extra2" matInput>
         </mat-form-field>
         <button mat-button color="primary" routerLink="/team/2/player">Aggiungi Giocatore</button>
+        <p>Valori Finali</p>
 
         <table #finalSecondTeamTable mat-table [dataSource]="secondTeamValues" class="mat-elevation-z8">
 
