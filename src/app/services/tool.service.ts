@@ -239,8 +239,10 @@ export class ToolService {
     let sumBonus = bonus.reduce((a, b) => a + b, 0)
 
     if (diffBonus < 0) {
-      value = value + diffBonus
-      if (value < 0) {
+      let diff = 0
+      diff = value + diffBonus
+      if (diff < 0) {
+        diffBonus = -value
         value = 0
       }
     } else {
@@ -266,10 +268,11 @@ export class ToolService {
     let sum = values.reduce((a, b) => a + b.finalValue, 0)
     let sumBonus = bonus.reduce((a, b) => a + b, 0)
 
-
     if (diffBonus < 0) {
-      value = value + diffBonus
-      if (value < 0) {
+      let diff = 0
+      diff = value + diffBonus
+      if (diff < 0) {
+        diffBonus = -value
         value = 0
       }
     } else {
