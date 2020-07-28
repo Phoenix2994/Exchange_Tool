@@ -14,6 +14,8 @@ import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { ToolService } from '../services/tool.service';
+import { ContractTypeMapPipe } from '../pipes/contract-type-map.pipe';
+import { BonusComputePipe } from '../pipes/bonus-compute.pipe';
 
 
 @NgModule({
@@ -29,6 +31,12 @@ import { ToolService } from '../services/tool.service';
     MatButtonModule,
     MatTableModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage,
+    ContractTypeMapPipe,
+    BonusComputePipe],
+  providers: [
+    ContractTypeMapPipe,
+    BonusComputePipe
+  ]
 })
-export class HomePageModule {}
+export class HomePageModule { }

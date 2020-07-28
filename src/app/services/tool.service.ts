@@ -57,7 +57,9 @@ export class ToolService {
     this.bonusSecondTeam = []
     this.firstTeamValue = +this.extra1
     this.secondTeamValue = +this.extra2
+    // check if there is a player lending with right to buy
     if (this.checkIfRightLend()) {
+      //compute values for teams
       this.firstTeam.forEach(
         player => {
           if (player.contractType === 'def') {
@@ -118,10 +120,12 @@ export class ToolService {
         }
       )
 
+      // compute bonus for teams
       let bonus1 = this.bonusFirstTeam.reduce((a, b) => a + b, 0)
       let bonus2 = this.bonusSecondTeam.reduce((a, b) => a + b, 0)
       console.log(this.firstTeamValue - this.secondTeamValue)
 
+      //only the smallest valued team will be fixed by addRightValueProportionally
       if (this.firstTeamValue > this.secondTeamValue) {
         let finalSecondTeamValues = this.addRightValueProportionally(this.firstTeamValue - this.secondTeamValue, bonus1 - bonus2, this.finalSecondTeamValues, this.bonusSecondTeam)
 
@@ -150,6 +154,7 @@ export class ToolService {
       }
 
     } else {
+      //compute values for teams
       this.firstTeam.forEach(
         player => {
           if (player.contractType === 'def') {
@@ -200,12 +205,14 @@ export class ToolService {
         }
       )
 
+      // compute bonus for teams
       console.log(this.firstTeamValue - this.secondTeamValue)
 
       let bonus1 = this.bonusFirstTeam.reduce((a, b) => a + b, 0)
       let bonus2 = this.bonusSecondTeam.reduce((a, b) => a + b, 0)
 
 
+      //only the smallest valued team will be fixed by addValueProportionally
       if (this.firstTeamValue > this.secondTeamValue) {
         let finalSecondTeamValues = this.addValueProportionally(this.firstTeamValue - this.secondTeamValue, bonus1 - bonus2, this.finalSecondTeamValues, this.bonusSecondTeam)
         this.finalSecondTeamValues = []
@@ -235,15 +242,28 @@ export class ToolService {
   }
 
   addValueProportionally(value: number, diffBonus: number, values: Player[], bonus: number[]) {
+    //compute sum player values and bonus payed for these players
     let sum = values.reduce((a, b) => a + b.value, 0)
     let sumBonus = bonus.reduce((a, b) => a + b, 0)
 
+    /*1)if difference from bonus is smaller than zero the smallest valued team has
+    produced smaller bonus:
+
+     Is this difference bigger or smaller than the total value difference between teams?
+
+     a) Bigger: the difference is valued as bonus with value = 0
+     b) Smaller: the difference is valued as not bonus and diffBonus has the same value
+
+     2) if difference is bigger the bonus is not valued 
+    */
     if (diffBonus < 0) {
       let diff = 0
       diff = value + diffBonus
       if (diff < 0) {
         diffBonus = -value
         value = 0
+      } else {
+        value = diff
       }
     } else {
       diffBonus = 0
@@ -274,6 +294,8 @@ export class ToolService {
       if (diff < 0) {
         diffBonus = -value
         value = 0
+      } else {
+        value = diff
       }
     } else {
       diffBonus = 0

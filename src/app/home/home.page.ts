@@ -25,10 +25,13 @@ export class HomePage implements ViewWillEnter {
   @ViewChild('finalFirstTeamTable') finalFirstTeamTable: MatTable<Player>;
   @ViewChild('finalSecondTeamTable') finalSecondTeamTable: MatTable<Player>;
 
-  displayedColumns: string[] = ['position', 'value', 'remove'];
+  firstTeamCols: string[] = ['position', 'value', 'contract', 'length', 'bonus', 'remove'];
 
-  finalDisplayedColumns: string[] = ['position', 'value'];
+  finalFirstTeamCols: string[] = ['position', 'value'];
 
+  secondTeamCols: string[] = ['position', 'value', 'contract', 'length', 'bonus', 'remove'];
+
+  finalSecondTeamCols: string[] = ['position', 'value'];
 
   constructor(private service: ToolService) { }
 
@@ -47,11 +50,11 @@ export class HomePage implements ViewWillEnter {
       value =>
         this.secondTeam.push(value)
     )
-      this.firstTeamTable.renderRows()
+    this.firstTeamTable.renderRows()
 
-    
-      this.secondTeamTable.renderRows()
-    
+
+    this.secondTeamTable.renderRows()
+
     this.service.computeFinalValues()
 
     this.service.finalFirstTeamValues.forEach(
@@ -71,11 +74,26 @@ export class HomePage implements ViewWillEnter {
         this.secondTeamValues.push(player)
       }
     )
-      this.finalFirstTeamTable.renderRows()
+    this.finalFirstTeamTable.renderRows()
 
-    
-      this.finalSecondTeamTable.renderRows()
-    
+
+    this.finalSecondTeamTable.renderRows()
+
+    if (this.firstTeamValues.length == 0) {
+      this.firstTeamCols = []
+      this.finalFirstTeamCols = []
+    } else {
+      this.firstTeamCols = ['position', 'value', 'contract', 'length', 'bonus', 'remove'];
+      this.finalFirstTeamCols = ['position', 'value'];
+    }
+
+    if (this.secondTeamValues.length == 0) {
+      this.secondTeamCols = []
+      this.finalSecondTeamCols = []
+    } else {
+      this.secondTeamCols = ['position', 'value', 'contract', 'length', 'bonus', 'remove'];
+      this.finalSecondTeamCols = ['position', 'value'];
+    }
 
   }
 
