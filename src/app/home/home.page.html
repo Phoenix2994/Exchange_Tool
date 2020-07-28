@@ -59,9 +59,11 @@
           <mat-label>Conguaglio</mat-label>
           <input (change)="setFirstExtra()" [(ngModel)]="extra1" matInput>
         </mat-form-field>
-        <button style="margin-bottom:50px" mat-button color="primary" routerLink="/team/1/player">Aggiungi Giocatore</button>
+        <button mat-button color="primary" routerLink="/team/1/player">Aggiungi Giocatore</button>
 
-        <b class="finalTitle">Valori Finali</b>
+        <div style="margin-top:50px">
+          <b >Valori Iniziali</b>
+        </div>
 
         <table #finalFirstTeamTable mat-table [dataSource]="firstTeamValues" class="mat-elevation-z8 final">
 
@@ -125,9 +127,12 @@
           <mat-label>Conguaglio</mat-label>
           <input (change)="setSecondExtra()" [(ngModel)]="extra2" matInput>
         </mat-form-field>
-        <button style="margin-bottom:50px" 
+        <button  
         mat-button color="primary" routerLink="/team/2/player">Aggiungi Giocatore</button>
-        <b class="finalTitle">Valori Finali</b>
+        
+        <div style="margin-top:50px">
+          <b >Valori Iniziali</b>
+        </div>
 
         <table #finalSecondTeamTable mat-table [dataSource]="secondTeamValues" class="mat-elevation-z8 final">
 
