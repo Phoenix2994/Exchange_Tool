@@ -50,11 +50,14 @@ export class HomePage implements ViewWillEnter {
       value =>
         this.secondTeam.push(value)
     )
-    this.firstTeamTable.renderRows()
+    if (this.firstTeam.length != 0) {
+      this.firstTeamTable.renderRows()
+    }
 
+    if (this.secondTeam.length != 0) {
 
-    this.secondTeamTable.renderRows()
-
+      this.secondTeamTable.renderRows()
+    }
     this.service.computeFinalValues()
 
     this.service.finalFirstTeamValues.forEach(
@@ -74,11 +77,13 @@ export class HomePage implements ViewWillEnter {
         this.secondTeamValues.push(player)
       }
     )
-    this.finalFirstTeamTable.renderRows()
+    if (this.firstTeam.length != 0) {
+      this.finalFirstTeamTable.renderRows()
+    }
+    if (this.secondTeam.length != 0) {
 
-
-    this.finalSecondTeamTable.renderRows()
-
+      this.finalSecondTeamTable.renderRows()
+    }
     if (this.firstTeamValues.length == 0) {
       this.firstTeamCols = []
       this.finalFirstTeamCols = []

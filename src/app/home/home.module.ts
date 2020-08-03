@@ -29,9 +29,11 @@ import { BonusComputePipe } from '../pipes/bonus-compute.pipe';
     MatInputModule,
     MatTabsModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    IonicModule.forRoot({ mode: 'md' })
   ],
-  declarations: [HomePage,
+  declarations: [
+    HomePage,
     ContractTypeMapPipe,
     BonusComputePipe],
   providers: [
