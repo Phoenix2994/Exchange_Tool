@@ -151,6 +151,19 @@ export class ToolService {
             this.finalFirstTeamValues.push(value)
           }
         )
+      } else{
+        this.finalFirstTeamValues = []
+        this.finalSecondTeamValues = []
+        this.firstTeam.forEach(
+          player =>{
+            this.finalFirstTeamValues.push(player)
+          }
+        )
+        this.secondTeam.forEach(
+          player =>{
+            this.finalSecondTeamValues.push(player)
+          }
+        )
       }
 
     } else {
@@ -235,6 +248,19 @@ export class ToolService {
         finalFirstTeamValues.forEach(
           value => {
             this.finalFirstTeamValues.push(value)
+          }
+        )
+      }else{
+        this.finalFirstTeamValues = []
+        this.finalSecondTeamValues = []
+        this.firstTeam.forEach(
+          player =>{
+            this.finalFirstTeamValues.push(player)
+          }
+        )
+        this.secondTeam.forEach(
+          player =>{
+            this.finalSecondTeamValues.push(player)
           }
         )
       }
