@@ -14,17 +14,18 @@
       <mat-label>Quotazione iniziale</mat-label>
       <input [(ngModel)]="quot" matInput>
     </mat-form-field>
+    <!--
     <mat-form-field appearance="fill">
       <mat-label>Quotazione finale</mat-label>
       <input [(ngModel)]="finalQuot" matInput>
-    </mat-form-field>
+    </mat-form-field>-->
     <mat-form-field appearance="fill">
       <mat-label>Contratto</mat-label>
       <mat-select [(ngModel)]="contractType">
         <mat-option value="def">Definitivo</mat-option>
         <mat-option value="lend">Prestito</mat-option>
-        <mat-option value="lendO">Prestito (obbligo)</mat-option>
-        <mat-option value="lendR">Prestito (diritto)</mat-option>
+        <!--<mat-option value="lendO">Prestito (obbligo)</mat-option>
+        <mat-option value="lendR">Prestito (diritto)</mat-option>-->
       </mat-select>
     </mat-form-field>
     <mat-form-field *ngIf="contractType != 'def'" appearance="fill">
