@@ -10,8 +10,8 @@ export class ToolService {
   firstTeam: Array<Player> = []
   secondTeam: Array<Player> = []
 
-  finalFirstTeamValues: Array<Player> = []
-  finalSecondTeamValues: Array<Player> = []
+  finalFirstTeam: Array<Player> = []
+  finalSecondTeam: Array<Player> = []
 
   bonusFirstTeam = []
   bonusSecondTeam = []
@@ -51,12 +51,13 @@ export class ToolService {
   }
 
   computeFinalValues() {
-    this.finalFirstTeamValues = []
-    this.finalSecondTeamValues = []
+    this.finalFirstTeam = []
+    this.finalSecondTeam = []
     this.bonusFirstTeam = []
     this.bonusSecondTeam = []
     this.firstTeamValue = +this.extra1
     this.secondTeamValue = +this.extra2
+    //this.computeBonus()
     // check if there is a player lending with right to buy
     if (this.checkIfRightLend()) {
       //compute values for teams
@@ -64,19 +65,28 @@ export class ToolService {
         player => {
           if (player.contractType === 'def') {
             this.firstTeamValue += +player.value / +player.quot * +player.finalQuot
-            this.finalFirstTeamValues.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null,
-              null, null, +player.value / +player.quot * +player.finalQuot, player.id))
-          } else if (player.contractType === 'lendO' || (player.contractType === 'lendR' && player.repaid === 'yes')) {
-            this.firstTeamValue += (+player.value < +player.repaidValue) ? +player.repaidValue : player.value
-            this.finalFirstTeamValues.push(new Player(+player.value, player.quot,
+            this.finalFirstTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot, player.contractType, player.contractLength, null, null,
+              null, player.finalQuot, +player.value, player.id))
+          } else if (player.contractType === 'lendO') {
+            this.firstTeamValue += +player.value / +player.quot * +player.finalQuot
+            this.secondTeamValue += +player.repaidValue
+            this.finalFirstTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot,
               player.contractType, player.contractLength, null, null,
-              null, null, (+player.value / +player.quot * +player.finalQuot < +player.repaidValue) ?
-              +player.repaidValue : +player.value / +player.quot * +player.finalQuot, player.id))
+              null, player.finalQuot, +player.value, player.id))
+          }
+          else if ((player.contractType === 'lendR' && player.repaid === 'yes')) {
+          
+            this.firstTeamValue += +player.value / +player.quot * +player.finalQuot 
+            this.secondTeamValue += +player.repaidValue
+
+            this.finalFirstTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot,
+              player.contractType, player.contractLength, null, null,
+              null, player.finalQuot, +player.value, player.id))
+
           } else {
             this.firstTeamValue += +player.value / +player.quot * +player.finalQuot * (+player.contractLength / 12) * 0.8
-            this.finalFirstTeamValues.push(new Player(+player.value,
-              player.quot, player.contractType, player.contractLength, null, player.repaid, null, null, +player.value / +player.quot *
-              +player.finalQuot * (+player.contractLength / 12) * 0.8, player.id))
+            this.finalFirstTeam.push(new Player(+player.value * (+player.contractLength / 12) * 0.8,
+              player.quot, player.contractType, player.contractLength, null, player.repaid, null, player.finalQuot, +player.value * (+player.contractLength / 12) * 0.8, player.id))
           }
           if (player.bonusList) {
             let secondTeamValue = this.secondTeamValue
@@ -94,19 +104,26 @@ export class ToolService {
         player => {
           if (player.contractType === 'def') {
             this.secondTeamValue += +player.value / +player.quot * +player.finalQuot
-            this.finalSecondTeamValues.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null,
-              null, null, +player.value / +player.quot * +player.finalQuot, player.id))
-          } else if (player.contractType === 'lendO') {
-            this.secondTeamValue += (+player.value < +player.repaidValue) ? +player.repaidValue : player.value
-            this.finalSecondTeamValues.push(new Player(+player.value, player.quot,
+            this.finalSecondTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot, player.contractType, player.contractLength, null, null,
+              null, player.finalQuot, +player.value, player.id))
+          } else if (player.contractType === 'lendO' || (player.contractType === 'lendR' && player.repaid === 'yes')) {
+            this.secondTeamValue += +player.value / +player.quot * +player.finalQuot
+            this.firstTeamValue += +player.repaidValue
+            this.finalSecondTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot,
               player.contractType, player.contractLength, null, null,
-              null, null, (+player.value / +player.quot * +player.finalQuot < +player.repaidValue) ?
-              +player.repaidValue : +player.value / +player.quot * +player.finalQuot, player.id))
+              null, player.finalQuot, +player.value , player.id))
+          } else if ((player.contractType === 'lendR' && player.repaid === 'yes')) {
+            this.secondTeamValue += +player.value / +player.quot * +player.finalQuot
+            this.firstTeamValue += +player.repaidValue
+
+            this.finalSecondTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot,
+              player.contractType, player.contractLength, null, null,
+              null, player.finalQuot, +player.value , player.id))
+
           } else {
             this.secondTeamValue += +player.value / +player.quot * +player.finalQuot * (+player.contractLength / 12) * 0.8
-            this.finalSecondTeamValues.push(new Player(+player.value,
-              player.quot, player.contractType, player.contractLength, null, player.repaid, null, null, +player.value / +player.quot *
-              +player.finalQuot * (+player.contractLength / 12) * 0.8, player.id))
+            this.finalSecondTeam.push(new Player(+player.value * (+player.contractLength / 12) * 0.8,
+              player.quot, player.contractType, player.contractLength, null, player.repaid, null, player.finalQuot, +player.value  * (+player.contractLength / 12) * 0.8, player.id))
           }
           if (player.bonusList) {
             let firstTeamValue = this.firstTeamValue
@@ -127,41 +144,50 @@ export class ToolService {
 
       //only the smallest valued team will be fixed by addRightValueProportionally
       if (this.firstTeamValue > this.secondTeamValue) {
-        let finalSecondTeamValues = this.addRightValueProportionally(this.firstTeamValue - this.secondTeamValue, bonus1 - bonus2, this.finalSecondTeamValues, this.bonusSecondTeam)
+        let finalSecondTeam = this.addRightValueProportionally(this.firstTeamValue - this.secondTeamValue, bonus1 - bonus2, this.finalSecondTeam, this.bonusSecondTeam)
 
-        this.finalSecondTeamValues = []
-        this.finalFirstTeamValues = []
+        this.finalSecondTeam = []
+        this.finalFirstTeam = []
         this.firstTeam.forEach(
-          value => this.finalFirstTeamValues.push(value)
+          player => {
+            this.finalFirstTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot, player.contractType, player.contractLength, player.bonusList, player.repaid,
+              player.repaidValue, player.finalQuot, +player.value / +player.quot * +player.finalQuot, player.id))
+          }
         )
-        finalSecondTeamValues.forEach(
+        finalSecondTeam.forEach(
           value => {
-            this.finalSecondTeamValues.push(value)
+            this.finalSecondTeam.push(value)
           }
         )
       } else if (this.firstTeamValue < this.secondTeamValue) {
-        let finalFirstTeamValues = this.addRightValueProportionally(this.secondTeamValue - this.firstTeamValue, bonus2 - bonus1, this.finalFirstTeamValues, this.bonusFirstTeam)
-        this.finalFirstTeamValues = []
-        this.finalSecondTeamValues = []
+        let finalFirstTeam = this.addRightValueProportionally(this.secondTeamValue - this.firstTeamValue, bonus2 - bonus1, this.finalFirstTeam, this.bonusFirstTeam)
+        this.finalFirstTeam = []
+        this.finalSecondTeam = []
         this.secondTeam.forEach(
-          value => this.finalSecondTeamValues.push(value)
+          player => {
+            this.finalSecondTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot, player.contractType, player.contractLength, player.bonusList, player.repaid,
+              player.repaidValue, player.finalQuot, +player.value / +player.quot * +player.finalQuot, player.id))
+          }
         )
-        finalFirstTeamValues.forEach(
+        finalFirstTeam.forEach(
           value => {
-            this.finalFirstTeamValues.push(value)
+            this.finalFirstTeam.push(value)
           }
         )
-      } else{
-        this.finalFirstTeamValues = []
-        this.finalSecondTeamValues = []
+      } else {
+        this.finalFirstTeam = []
+        this.finalSecondTeam = []
         this.firstTeam.forEach(
-          player =>{
-            this.finalFirstTeamValues.push(player)
+          player => {
+            this.finalFirstTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot, player.contractType, player.contractLength, player.bonusList, player.repaid,
+              player.repaidValue, player.finalQuot, +player.value / +player.quot * +player.finalQuot, player.id))
           }
         )
         this.secondTeam.forEach(
-          player =>{
-            this.finalSecondTeamValues.push(player)
+          player => {
+            this.finalSecondTeam.push(new Player(+player.value / +player.quot * +player.finalQuot, player.quot, player.contractType, player.contractLength, player.bonusList, player.repaid,
+              player.repaidValue, player.finalQuot, +player.value / +player.quot * +player.finalQuot, player.id))
+            this.finalSecondTeam.push(player)
           }
         )
       }
@@ -172,13 +198,14 @@ export class ToolService {
         player => {
           if (player.contractType === 'def') {
             this.firstTeamValue += +player.value
-            this.finalFirstTeamValues.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
+            this.finalFirstTeam.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
           } else if (player.contractType === 'lendO') {
-            this.firstTeamValue += +player.repaidValue
-            this.finalFirstTeamValues.push(new Player(+player.repaidValue, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
+            this.firstTeamValue += +player.value
+            this.secondTeamValue += +player.repaidValue
+            this.finalFirstTeam.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
           } else {
             this.firstTeamValue += +player.value * (+player.contractLength / 12) * 0.8
-            this.finalFirstTeamValues.push(new Player(+player.value * (+player.contractLength / 12) * 0.8,
+            this.finalFirstTeam.push(new Player(+player.value * (+player.contractLength / 12) * 0.8,
               player.quot, player.contractType, player.contractLength, null, player.repaid, null, null, null, player.id))
           }
           if (player.bonusList) {
@@ -197,13 +224,14 @@ export class ToolService {
         player => {
           if (player.contractType === 'def') {
             this.secondTeamValue += +player.value
-            this.finalSecondTeamValues.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
+            this.finalSecondTeam.push(new Player(+player.value, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
           } else if (player.contractType === 'lendO') {
-            this.secondTeamValue += +player.repaidValue
-            this.finalSecondTeamValues.push(new Player(+player.repaidValue, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
+            this.secondTeamValue += +player.value
+            this.firstTeamValue += +player.repaidValue
+            this.finalSecondTeam.push(new Player(+player.repaidValue, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
           } else {
             this.secondTeamValue += +player.value * (+player.contractLength / 12) * 0.8
-            this.finalSecondTeamValues.push(new Player(+player.value * (+player.contractLength / 12) * 0.8,
+            this.finalSecondTeam.push(new Player(+player.value * (+player.contractLength / 12) * 0.8,
               player.quot, player.contractType, player.contractLength, null, player.repaid, null, null, null, player.id))
           }
           if (player.bonusList) {
@@ -227,44 +255,77 @@ export class ToolService {
 
       //only the smallest valued team will be fixed by addValueProportionally
       if (this.firstTeamValue > this.secondTeamValue) {
-        let finalSecondTeamValues = this.addValueProportionally(this.firstTeamValue - this.secondTeamValue, bonus1 - bonus2, this.finalSecondTeamValues, this.bonusSecondTeam)
-        this.finalSecondTeamValues = []
-        this.finalFirstTeamValues = []
+        let finalSecondTeam = this.addValueProportionally(this.firstTeamValue - this.secondTeamValue, bonus1 - bonus2, this.finalSecondTeam, this.bonusSecondTeam)
+        this.finalSecondTeam = []
+        this.finalFirstTeam = []
         this.firstTeam.forEach(
-          value => this.finalFirstTeamValues.push(value)
+          value => this.finalFirstTeam.push(value)
         )
-        finalSecondTeamValues.forEach(
+        finalSecondTeam.forEach(
           value => {
-            this.finalSecondTeamValues.push(value)
+            this.finalSecondTeam.push(value)
           }
         )
       } else if (this.firstTeamValue < this.secondTeamValue) {
-        let finalFirstTeamValues = this.addValueProportionally(this.secondTeamValue - this.firstTeamValue, bonus2 - bonus1, this.finalFirstTeamValues, this.bonusFirstTeam)
-        this.finalFirstTeamValues = []
-        this.finalSecondTeamValues = []
+        let finalFirstTeam = this.addValueProportionally(this.secondTeamValue - this.firstTeamValue, bonus2 - bonus1, this.finalFirstTeam, this.bonusFirstTeam)
+        this.finalFirstTeam = []
+        this.finalSecondTeam = []
         this.secondTeam.forEach(
-          value => this.finalSecondTeamValues.push(value)
+          value => this.finalSecondTeam.push(value)
         )
-        finalFirstTeamValues.forEach(
+        finalFirstTeam.forEach(
           value => {
-            this.finalFirstTeamValues.push(value)
+            this.finalFirstTeam.push(value)
           }
         )
-      }else{
-        this.finalFirstTeamValues = []
-        this.finalSecondTeamValues = []
+      } else {
+        this.finalFirstTeam = []
+        this.finalSecondTeam = []
         this.firstTeam.forEach(
-          player =>{
-            this.finalFirstTeamValues.push(player)
+          player => {
+            this.finalFirstTeam.push(player)
           }
         )
         this.secondTeam.forEach(
-          player =>{
-            this.finalSecondTeamValues.push(player)
+          player => {
+            this.finalSecondTeam.push(player)
           }
         )
       }
     }
+  }
+
+  computeBonus(bonus: number, teamNumber: number){
+    this.firstTeam.forEach(
+      player => {
+        if (player.bonusList) {
+          let playerBonus = 0
+          player.bonusList.forEach(
+            bonus => {
+              playerBonus += bonus.events * bonus.reward
+            }
+          )
+          this.bonusFirstTeam.push(playerBonus)
+
+        }
+      }
+    )
+    this.secondTeam.forEach(
+      player => {
+        if (player.bonusList) {
+          let playerBonus = 0
+          player.bonusList.forEach(
+            bonus => {
+              playerBonus += bonus.events * bonus.reward
+            }
+          )
+          this.bonusSecondTeam.push(playerBonus)
+
+        }
+      }
+    )
+    let bonus1 = this.bonusFirstTeam.reduce((a, b) => a + b, 0)
+    let bonus2 = this.bonusSecondTeam.reduce((a, b) => a + b, 0)
   }
 
   addValueProportionally(value: number, diffBonus: number, values: Player[], bonus: number[]) {
@@ -331,13 +392,21 @@ export class ToolService {
     values.forEach(
       (player, index) => {
         if (player.contractType == "lend" || player.repaid == "no") {
-          newValues.push(new Player(((player.finalValue < player.value + player.finalValue / sum * value + bonus[index] / sumBonus * (diffBonus * -1)) ?
-            (player.value + player.finalValue / sum * value + bonus[index] / sumBonus * (diffBonus * -1))
-            : player.finalValue) * (12 / +player.contractLength) / 0.8, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
+          newValues.push(new Player((((player.finalValue / +player.quot *
+            +player.finalQuot < player.value + player.finalValue / +player.quot *
+            +player.finalQuot / sum * value + bonus[index] / sumBonus * (diffBonus * -1)) ?
+            (player.value + player.finalValue / +player.quot *
+              +player.finalQuot / sum * value + bonus[index] / sumBonus * (diffBonus * -1))
+            : player.finalValue / +player.quot *
+            +player.finalQuot) * (12 / +player.contractLength) / 0.8) , player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
         } else {
-          newValues.push(new Player((player.finalValue < player.value + player.finalValue / sum * value + bonus[index] / sumBonus * (diffBonus * -1)) ?
-            player.value + player.finalValue / sum * value + bonus[index] / sumBonus * (diffBonus * -1) :
-            player.finalValue, player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
+          newValues.push(new Player(((player.finalValue / +player.quot *
+            +player.finalQuot < player.value + player.finalValue / +player.quot *
+            +player.finalQuot / sum * value + bonus[index] / sumBonus * (diffBonus * -1)) ?
+            player.value + player.finalValue / +player.quot *
+            +player.finalQuot / sum * value + bonus[index] / sumBonus * (diffBonus * -1) :
+            player.finalValue / +player.quot *
+            +player.finalQuot) , player.quot, player.contractType, player.contractLength, null, null, null, null, null, player.id))
         }
       }
     )
@@ -362,6 +431,7 @@ export class ToolService {
     )
     return right;
   }
+
 
   remove(id: number) {
     this.firstTeam = this.firstTeam.filter(val => val.id != id)
