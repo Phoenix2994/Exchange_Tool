@@ -16,6 +16,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { ToolService } from '../services/tool.service';
 import { ContractTypeMapPipe } from '../pipes/contract-type-map.pipe';
 import { BonusComputePipe } from '../pipes/bonus-compute.pipe';
+import { RoundPipe } from '../pipes/round.pipe';
 
 
 @NgModule({
@@ -35,10 +36,13 @@ import { BonusComputePipe } from '../pipes/bonus-compute.pipe';
   declarations: [
     HomePage,
     ContractTypeMapPipe,
-    BonusComputePipe],
+    BonusComputePipe,
+    RoundPipe
+  ],
   providers: [
     ContractTypeMapPipe,
-    BonusComputePipe
+    BonusComputePipe,
+    RoundPipe
   ]
 })
 export class HomePageModule { }

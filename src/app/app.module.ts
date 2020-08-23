@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToolService } from './services/tool.service';
+import { RoundPipe } from './pipes/round.pipe';
 
 
 @NgModule({
@@ -23,5 +24,6 @@ import { ToolService } from './services/tool.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
+ 
 })
 export class AppModule { }

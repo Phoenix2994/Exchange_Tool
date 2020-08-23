@@ -12,4 +12,4 @@ platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
 
 
-console.log('exchange_tool v.0.0.17')
+console.log('exchange_tool v.0.0.18')
