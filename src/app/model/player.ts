@@ -5,6 +5,5 @@ export class Player {
         public contractType: string, public contractLength: string,
         public bonusList?: Array<Bonus>, public repaid?: string, public repaidValue?: number, public finalQuot?:number, 
         public finalValue?:number, public id?: number) {
-
     }
 }

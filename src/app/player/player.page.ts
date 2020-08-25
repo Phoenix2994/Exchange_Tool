@@ -42,8 +42,8 @@ export class PlayerPage implements OnInit {
       bonus.push(new Bonus(+(this.bonus1Number.replace(/,/g, '.')), +(this.bonus1Reward.replace(/,/g, '.'))))
       bonus.push(new Bonus(+(this.bonus2Number.replace(/,/g, '.')), +(this.bonus2Reward.replace(/,/g, '.'))))
     }
-    this.service.save(+this.id, new Player(+(this.value.replace(/,/g, '.')), this.quot, this.contractType, this.contractLength, bonus, this.repaid, this.repaidValue ? +(this.repaidValue.replace(/,/g, '.')) : null,
-      this.finalQuot ? this.finalQuot : this.quot))
+    this.service.save(+this.id, new Player(+(this.value.replace(/,/g, '.')), +this.quot, this.contractType, this.contractLength, bonus, this.repaid, this.repaidValue ? +(this.repaidValue.replace(/,/g, '.')) : null,
+      this.finalQuot ? +this.finalQuot : +this.quot, +(this.value.replace(/,/g, '.'))))
     this.router.navigate(['/home'])
   }
 
