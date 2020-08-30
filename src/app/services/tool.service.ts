@@ -192,170 +192,202 @@ export class ToolService {
       if (this.firstTeamValue == this.finalFirstTeamValue) {
         //2.3.1.1
         if (this.firstTeamValue + this.bonus2 + this.repaid2 > this.secondTeamValue + this.bonus1 + this.repaid1) {
+          this.finalFirstTeam.forEach(
+            player => {
+              player.finalValue = player.value / player.quot * player.finalQuot
+            }
+          )
+        } else {
           // 2.3.1.1.1
           if (this.secondTeamValue - this.extra2 == 0) {
             //2.3.1.1.1.1
-            if (this.repaid1/ this.finalFirstTeamValueEval > 1) {
-              this.finalFirstTeam.forEach(
-                player => {
-                  player.finalValue = this.repaid1 * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
-                }
-              )
-            } else {
-              //2.3.1.1.1.2
-              this.finalFirstTeam.forEach(
-                player => {
+            this.finalFirstTeam.forEach(
+              player => {
+                if ((this.repaid1 + this.bonus1 + this.extra2 - this.extra1) / this.finalFirstTeamValueEval > 1) {
+                  player.finalValue = (this.repaid1 + this.bonus1 + this.extra2 - this.extra1) *
+                    (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
+                } else {
                   player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
                 }
-              )
-            }
+              }
+            )
           } else {
             //2.3.1.1.2
             this.finalFirstTeam.forEach(
               player => {
-                player.finalValue = player.value / player.quot * player.finalQuot
+                player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.firstTeamValue - this.bonus2 - this.repaid2 +
+                  this.secondTeamValue + this.bonus1 + this.repaid1) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
+                  this.finalFirstTeamValueEval
               }
             )
           }
-        } else { //2.3.1.2
-          if (this.secondTeamValue - this.extra2 == 0) {
-            //2.3.1.2.1
-            if (this.repaid1 / this.finalFirstTeamValueEval > 1) {
-              //2.3.1.2.1.1
-              this.finalFirstTeam.forEach(
-                player => {
-                  player.finalValue = this.repaid1 * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
-                }
-              )
-              console.log(JSON.parse(JSON.stringify(this.finalFirstTeam)))
 
-            } else {
-              //2.3.1.2.1.2
-              this.finalFirstTeam.forEach(
-                player => {
-                  player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
-                }
-              )
-            }
-          } else {
-            //2.3.1.2.2
-
-            this.finalFirstTeam.forEach(
-              player => {
-                console.log((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot)
-
-                player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
-                  (this.secondTeamValue + this.bonus1 + this.repaid1 - this.firstTeamValue - this.bonus2 - this.repaid2) * (player.value < player.finalValue ? player.finalValue : player.value)
-                  / player.quot * player.finalQuot / this.finalFirstTeamValueEval
-              }
-            )
-
-          }
         }
-        //2.3.2
-      } else {
-        //2.3.2.1
-        if (this.finalSecondTeamValue + this.bonus1 + this.repaid1 > this.finalFirstTeamValue + this.bonus2 + this.repaid2) {
-          this.finalFirstTeam.forEach(
-            player => {
-              player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) +
-                (this.finalSecondTeamValue + this.bonus1 + this.repaid1 - this.finalFirstTeamValue - this.bonus2 - this.repaid2) * ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot)
-                / (this.finalFirstTeamValueEval)
-            }
-          )
-          //2.3.2.2
-        } else {
-          if (this.finalSecondTeamValue + this.repaid1 + this.bonus1 > this.firstTeamValue + this.bonus2 + this.repaid2) {
-            //2.3.2.3
+      } else { //2.3.1.2
+        if (this.finalFirstTeamValue + this.bonus2 + this.repaid2 > this.finalSecondTeamValue + this.bonus1 + this.repaid1) {
+          if (1 - this.finalSecondTeamValue - this.bonus1 - this.repaid1 > 1 - this.firstTeamValue - this.bonus2 - this.repaid2) {
             this.finalFirstTeam.forEach(
               player => {
-                if (player.contractType === 'lend') {
-                  if (((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot * 0.8 * (+player.contractLength / 12) +
-                    (this.finalFirstTeamValue - this.firstTeamValue) * (player.value < player.finalValue ? player.finalValue : player.value) /
-                    (this.finalFirstTeamValue - this.extra1)) < player.value / player.quot * player.finalQuot) {
-                    //2.3.2.3.1
-                    player.finalValue = (player.value / player.quot * player.finalQuot)
-                  }
-                  else {
-                    //2.3.2.3.2
-                    player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) + (12 / +player.contractLength) / 0.8 *
-                      (this.finalSecondTeamValue + this.bonus1 + this.repaid1 - this.firstTeamValue - this.bonus2 - this.repaid2) * ((player.value < player.finalValue ? player.finalValue : player.value)) *
-                      (this.finalFirstTeamValue - this.extra1)
-                  }
-                } else if (player.repaid === 'no' && player.contractType === 'lendR') {
-                  if (((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot * (+player.contractLength / 12) +
-                    (this.finalFirstTeamValue - this.firstTeamValue) * (player.value < player.finalValue ? player.finalValue : player.value) /
-                    (this.finalFirstTeamValue - this.extra1)) < player.value / player.quot * player.finalQuot) {
-                    //2.3.2.3.1
-                    player.finalValue = (player.value / player.quot * player.finalQuot)
-                  }
-                  else {
-                    //2.3.2.3.2
-                    player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) + (12 / +player.contractLength) *
-                      (this.finalSecondTeamValue + this.bonus1 + this.repaid1 - this.firstTeamValue - this.bonus2 - this.repaid2) * ((player.value < player.finalValue ? player.finalValue : player.value)) *
-                      (this.finalFirstTeamValue - this.extra1)
+                if ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                  ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                  < player.value / player.quot * player.finalQuot) {
+                  player.finalValue = player.value / player.quot * player.finalQuot
+                } else {
+                  player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                    ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                }
+              }
+            )
+          } else {
+            this.finalFirstTeam.forEach(
+              player => {
+                if ((-this.finalSecondTeamValue - this.bonus1 - this.repaid1 + this.finalFirstTeamValue + this.bonus2 + this.repaid2) *
+                  (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
+                  > (player.value < player.finalValue ? player.finalValue : player.value) - player.value) {
+                  if ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                    ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                    < player.value / player.quot * player.finalQuot) {
+                    player.finalValue = player.value / player.quot * player.finalQuot
+                  } else {
+                    player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                      ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
                   }
                 } else {
-                  if (((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
-                    (this.finalFirstTeamValue - this.firstTeamValue) * (player.value < player.finalValue ? player.finalValue : player.value) /
-                    (this.finalFirstTeamValue - this.extra1)) < player.value / player.quot * player.finalQuot) {
-                    //2.3.2.3.1
-                    player.finalValue = (player.value / player.quot * player.finalQuot)
+                  if ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
+                    (-this.finalFirstTeamValue - this.bonus2 - this.repaid2 + this.finalSecondTeamValue + this.bonus1 + this.repaid1) *
+                    (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval <
+                    player.value / player.quot * player.finalQuot) {
+                    player.finalValue = player.value / player.quot * player.finalQuot
                   } else {
-                    //2.3.2.3.2
-                    player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) +
-                      (this.finalSecondTeamValue + this.bonus1 + this.repaid1 - this.firstTeamValue - this.bonus2 - this.repaid2) * ((player.value < player.finalValue ? player.finalValue : player.value)) *
-                      (this.finalFirstTeamValue - this.extra1)
+                    player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
+                      (-this.finalFirstTeamValue - this.bonus2 - this.repaid2 + this.finalSecondTeamValue + this.bonus1 + this.repaid1) *
+                      (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
                   }
                 }
               }
             )
-
-          } else {
-            // 2.3.2.4
+          }
+        } else {
+          if (this.secondTeamValue - this.extra2 == 0) {
             this.finalFirstTeam.forEach(
               player => {
-                if (player.contractType === 'lend' || (player.repaid === 'no' && player.contractType === 'lendR')) {
-                  if (((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot * 0.8 * (+player.contractLength / 12) +
-                    (this.finalFirstTeamValue + this.bonus2 + this.repaid2 - this.finalSecondTeamValue - this.bonus1 - this.repaid1) *
-                    (player.value < player.finalValue ? player.finalValue : player.value) /
-                    (this.finalFirstTeamValue - this.extra1)) < player.value / player.quot * player.finalQuot) {
-                    //2.3.2.4.1
-                    player.finalValue = (player.value / player.quot * player.finalQuot)
-                  } else {
-                    //2.3.2.4.2
-                    player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) + (12 / +player.contractLength) / 0.8 *
-                      (this.finalFirstTeamValue + this.bonus2 + this.repaid2 - this.finalSecondTeamValue - this.bonus1 - this.repaid1) * ((player.value < player.finalValue ? player.finalValue : player.value)) *
-                      (this.finalFirstTeamValue - this.extra1)
-                  }
-                } else if (player.repaid === 'no' && player.contractType === 'lendR') {
-                  if (((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot * (+player.contractLength / 12) +
-                    (this.finalFirstTeamValue + this.bonus2 + this.repaid2 - this.finalSecondTeamValue - this.bonus1 - this.repaid1) *
-                    (player.value < player.finalValue ? player.finalValue : player.value) /
-                    (this.finalFirstTeamValue - this.extra1)) < player.value / player.quot * player.finalQuot) {
-                    //2.3.2.4.1
-                    player.finalValue = (player.value / player.quot * player.finalQuot)
-                  } else {
-                    //2.3.2.4.2
-                    player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) + (12 / +player.contractLength) *
-                      (this.finalFirstTeamValue + this.bonus2 + this.repaid2 - this.finalSecondTeamValue - this.bonus1 - this.repaid1) * ((player.value < player.finalValue ? player.finalValue : player.value)) *
-                      (this.finalFirstTeamValue - this.extra1)
-                  }
+                if ((this.repaid1 + this.bonus1 + this.extra2 - this.extra1) / this.finalFirstTeamValueEval > 1) {
+                  player.finalValue = (this.repaid1 + this.bonus1 + this.extra2 - this.extra1) *
+                    (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
+                } else {
+                  player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
                 }
-                else {
-                  if (((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
-                    (this.finalFirstTeamValue + this.bonus2 + this.repaid2 - this.finalSecondTeamValue - this.bonus1 - this.repaid1) *
-                    (player.value < player.finalValue ? player.finalValue : player.value) /
-                    (this.finalFirstTeamValue - this.extra1)) < player.value / player.quot * player.finalQuot) {
-                    //2.3.2.4.1
-                    player.finalValue = (player.value / player.quot * player.finalQuot)
-                  } else {
-                    //2.3.2.4.2
-                    player.finalValue = ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot) +
-                      (this.finalFirstTeamValue + this.bonus2 + this.repaid2 - this.finalSecondTeamValue - this.bonus1 - this.repaid1) * ((player.value < player.finalValue ? player.finalValue : player.value)) *
-                      (this.finalFirstTeamValue - this.extra1)
-                  }
+              }
+            )
+          } else {
+            this.finalFirstTeam.forEach(
+              player => {
+                player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.finalFirstTeamValue - this.bonus2 - this.repaid2 +
+                  this.finalSecondTeamValue + this.bonus1 + this.repaid1) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
+                  this.finalFirstTeamValueEval
+              }
+            )
+          }
+        }
+      }
+      // SECOND TEAM
+      if (this.secondTeamValue == this.finalSecondTeamValue) {
+        //2.3.1.1
+        if (this.secondTeamValue + this.bonus1 + this.repaid1 > this.firstTeamValue + this.bonus2 + this.repaid2) {
+          this.finalSecondTeam.forEach(
+            player => {
+              player.finalValue = player.value / player.quot * player.finalQuot
+            }
+          )
+        } else {
+          // 2.3.1.1.1
+          if (this.firstTeamValue - this.extra1 == 0) {
+            //2.3.1.1.1.1
+            this.finalSecondTeam.forEach(
+              player => {
+                if ((this.repaid2 + this.bonus2 + this.extra1 - this.extra2) / this.finalSecondTeamValueEval > 1) {
+                  player.finalValue = (this.repaid2 + this.bonus2 + this.extra1 - this.extra2) *
+                    (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval
+                } else {
+                  player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
                 }
+              }
+            )
+          } else {
+            //2.3.1.1.2
+            this.finalSecondTeam.forEach(
+              player => {
+                player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.secondTeamValue - this.bonus1 - this.repaid1 +
+                  this.firstTeamValue + this.bonus2 + this.repaid2) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
+                  this.finalSecondTeamValueEval
+              }
+            )
+          }
+
+        }
+      } else { //2.3.1.2
+        if (this.finalSecondTeamValue + this.bonus1 + this.repaid1 > this.finalFirstTeamValue + this.bonus2 + this.repaid2) {
+          if (1 - this.finalFirstTeamValue - this.bonus2 - this.repaid2 > 1 - this.secondTeamValue - this.bonus1 - this.repaid1) {
+            this.finalSecondTeam.forEach(
+              player => {
+                if ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                  ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                  < player.value / player.quot * player.finalQuot) {
+                  player.finalValue = player.value / player.quot * player.finalQuot
+                } else {
+                  player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                    ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                }
+              }
+            )
+          } else {
+            this.finalSecondTeam.forEach(
+              player => {
+                if ((- this.finalFirstTeamValue - this.bonus2 - this.repaid2 + this.finalSecondTeamValue + this.bonus1 + this.repaid1) *
+                  (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval
+                  > (player.value < player.finalValue ? player.finalValue : player.value) - player.value) {
+                  if ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                    ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                    < player.value / player.quot * player.finalQuot) {
+                    player.finalValue = player.value / player.quot * player.finalQuot
+                  } else {
+                    player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot -
+                      ((player.value < player.finalValue ? player.finalValue : player.value) - player.value)
+                  }
+                } else {
+                  if ((player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
+                    (- this.finalSecondTeamValue - this.bonus1 - this.repaid1 + this.finalFirstTeamValue + this.bonus2 + this.repaid2) *
+                    (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval <
+                    player.value / player.quot * player.finalQuot) {
+                    player.finalValue = player.value / player.quot * player.finalQuot
+                  } else {
+                    player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot +
+                      (- this.finalSecondTeamValue - this.bonus1 - this.repaid1 + this.finalFirstTeamValue + this.bonus2 + this.repaid2) *
+                      (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval
+                  }
+
+                }
+              }
+            )
+          }
+        } else {
+          if (this.firstTeamValue - this.extra1 == 0) {
+            this.finalSecondTeam.forEach(
+              player => {
+                if ((this.repaid2 + this.bonus2 + this.extra1 - this.extra2) / this.finalSecondTeamValueEval > 1) {
+                  player.finalValue = (this.repaid2 + this.bonus2 + this.extra1 - this.extra2) *
+                    (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval
+                } else {
+                  player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
+                }
+              }
+            )
+          } else {
+            this.finalSecondTeam.forEach(
+              player => {
+                player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.finalSecondTeamValue - this.bonus1 - this.repaid1 +
+                  this.finalFirstTeamValue + this.bonus2 + this.repaid2) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
+                  this.finalSecondTeamValueEval
               }
             )
           }
@@ -399,17 +431,15 @@ export class ToolService {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
               (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
               (player.value / (teamSmallerValue - teamSmallerExtra) * 0.8 * (+player.contractLength / 12))
-          } else if (player.repaid === 'no' && player.contractType === 'lendR') { 
+          } else if (player.repaid === 'no' && player.contractType === 'lendR') {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
-            (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
-            (player.value / (teamSmallerValue - teamSmallerExtra) * (+player.contractLength / 12))
+              (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
+              (player.value / (teamSmallerValue - teamSmallerExtra) * (+player.contractLength / 12))
           }
           else {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
               (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
               (player.value / (teamSmallerValue - teamSmallerExtra))
-            console.log(player.finalValue)
-            console.log(players)
           }
         }
       )
