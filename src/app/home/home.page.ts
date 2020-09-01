@@ -61,18 +61,11 @@ export class HomePage implements ViewWillEnter {
 
     this.service.finalFirstTeam.forEach(
       player => {
-        if (player.value < player.finalValue) {
-          player.value = player.finalValue
-        }
         this.firstTeamValues.push(player)
-
       }
     )
     this.service.finalSecondTeam.forEach(
       player => {
-        if (player.value < player.finalValue) {
-          player.value = player.finalValue
-        }
         this.secondTeamValues.push(player)
       }
     )

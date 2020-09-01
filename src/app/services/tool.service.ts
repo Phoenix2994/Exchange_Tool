@@ -157,7 +157,18 @@ export class ToolService {
       this.finalFirstTeam = JSON.parse(JSON.stringify(finalFirstTeam))
       this.finalSecondTeam = JSON.parse(JSON.stringify(finalSecondTeam))
     }
-
+    this.finalFirstTeam.forEach(
+      player => {
+        if (player.value > player.finalValue) {
+          player.finalValue = player.value
+        }
+      })
+    this.finalSecondTeam.forEach(
+      player => {
+        if (player.value > player.finalValue) {
+          player.finalValue = player.value
+        }
+      })
     if (this.repaid1 != 0 || this.repaid2 != 0) {
       this.finalFirstTeam.forEach(
         (player, index) => {
