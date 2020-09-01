@@ -84,7 +84,7 @@ export class ToolService {
       player => {
         if (player.contractType === 'lend') {
           this.firstTeamValue += +player.value * (+player.contractLength / 12) * 0.8
-        } else if (player.repaid === 'no' && player.contractType === 'lendR') {
+        } else if (player.contractType === 'lendR') {
           this.firstTeamValue += +player.value * (+player.contractLength / 12)
         }
         else {
@@ -109,7 +109,7 @@ export class ToolService {
       player => {
         if (player.contractType === 'lend') {
           this.secondTeamValue += +player.value * (+player.contractLength / 12) * 0.8
-        } else if (player.repaid === 'no' && player.contractType === 'lendR') {
+        } else if (player.contractType === 'lendR') {
           this.secondTeamValue += +player.value * (+player.contractLength / 12)
         }
         else {
@@ -175,7 +175,7 @@ export class ToolService {
           if (player.contractType === 'lend') {
             this.finalFirstTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8
             this.finalFirstTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8 / player.quot * player.finalQuot
-          } else if (player.repaid === 'no' && player.contractType === 'lendR') {
+          } else if (player.contractType === 'lendR') {
             this.finalFirstTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12)
             this.finalFirstTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) / player.quot * player.finalQuot
           }
@@ -187,22 +187,26 @@ export class ToolService {
       )
       this.finalSecondTeam.forEach(
         (player, index) => {
-          if (player.contractType === 'lend' || (player.repaid === 'no' && player.contractType === 'lendR')) {
+          if (player.contractType === 'lend') {
             this.finalSecondTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8 / player.quot * player.finalQuot
-            this.finalSecondTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12)
-          } else if (player.repaid === 'no' && player.contractType === 'lendR') {
+            this.finalSecondTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8
+          } else if (player.contractType === 'lendR') {
             this.finalSecondTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12)
             this.finalSecondTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) / player.quot * player.finalQuot
           } else {
             this.finalSecondTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
+
             this.finalSecondTeamValue += (player.value < player.finalValue ? player.finalValue : player.value)
           }
+
         }
       )
+
       //2.3.1
       if (this.firstTeamValue == this.finalFirstTeamValue) {
         //2.3.1.1
         if (this.firstTeamValue + this.bonus2 + this.repaid2 > this.secondTeamValue + this.bonus1 + this.repaid1) {
+
           this.finalFirstTeam.forEach(
             player => {
               player.finalValue = player.value / player.quot * player.finalQuot
@@ -214,8 +218,8 @@ export class ToolService {
             //2.3.1.1.1.1
             this.finalFirstTeam.forEach(
               player => {
-                if ((this.repaid1 + this.bonus1 + this.extra2 - this.extra1) / this.finalFirstTeamValueEval > 1) {
-                  player.finalValue = (this.repaid1 + this.bonus1 + this.extra2 - this.extra1) *
+                if ((this.repaid1 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus1 + this.extra2 - this.extra1) / this.finalFirstTeamValueEval > 1) {
+                  player.finalValue = (this.repaid1 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus1 + this.extra2 - this.extra1) *
                     (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
                 } else {
                   player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
@@ -228,7 +232,7 @@ export class ToolService {
               player => {
                 player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.firstTeamValue - this.bonus2 - this.repaid2 +
                   this.secondTeamValue + this.bonus1 + this.repaid1) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
-                  this.finalFirstTeamValueEval
+                  this.finalFirstTeamValueEval * (player.repaid === 'yes' ? +player.contractLength / 12 : 1)
               }
             )
           }
@@ -282,8 +286,8 @@ export class ToolService {
           if (this.secondTeamValue - this.extra2 == 0) {
             this.finalFirstTeam.forEach(
               player => {
-                if ((this.repaid1 + this.bonus1 + this.extra2 - this.extra1) / this.finalFirstTeamValueEval > 1) {
-                  player.finalValue = (this.repaid1 + this.bonus1 + this.extra2 - this.extra1) *
+                if ((this.repaid1 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus1 + this.extra2 - this.extra1) / this.finalFirstTeamValueEval > 1) {
+                  player.finalValue = (this.repaid1 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus1 + this.extra2 - this.extra1) *
                     (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalFirstTeamValueEval
                 } else {
                   player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
@@ -295,7 +299,7 @@ export class ToolService {
               player => {
                 player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.finalFirstTeamValue - this.bonus2 - this.repaid2 +
                   this.finalSecondTeamValue + this.bonus1 + this.repaid1) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
-                  this.finalFirstTeamValueEval
+                  this.finalFirstTeamValueEval * (player.repaid === 'yes' ? +player.contractLength / 12 : 1)
               }
             )
           }
@@ -316,8 +320,8 @@ export class ToolService {
             //2.3.1.1.1.1
             this.finalSecondTeam.forEach(
               player => {
-                if ((this.repaid2 + this.bonus2 + this.extra1 - this.extra2) / this.finalSecondTeamValueEval > 1) {
-                  player.finalValue = (this.repaid2 + this.bonus2 + this.extra1 - this.extra2) *
+                if ((this.repaid2 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus2 + this.extra1 - this.extra2) / this.finalSecondTeamValueEval > 1) {
+                  player.finalValue = (this.repaid2 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus2 + this.extra1 - this.extra2) *
                     (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval
                 } else {
                   player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
@@ -330,7 +334,7 @@ export class ToolService {
               player => {
                 player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.secondTeamValue - this.bonus1 - this.repaid1 +
                   this.firstTeamValue + this.bonus2 + this.repaid2) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
-                  this.finalSecondTeamValueEval
+                  this.finalSecondTeamValueEval * (player.repaid === 'yes' ? +player.contractLength / 12 : 1)
               }
             )
           }
@@ -385,8 +389,8 @@ export class ToolService {
           if (this.firstTeamValue - this.extra1 == 0) {
             this.finalSecondTeam.forEach(
               player => {
-                if ((this.repaid2 + this.bonus2 + this.extra1 - this.extra2) / this.finalSecondTeamValueEval > 1) {
-                  player.finalValue = (this.repaid2 + this.bonus2 + this.extra1 - this.extra2) *
+                if ((this.repaid2 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus2 + this.extra1 - this.extra2) / this.finalSecondTeamValueEval > 1) {
+                  player.finalValue = (this.repaid2 * (player.repaid === 'yes' ? +player.contractLength / 12 : 1) + this.bonus2 + this.extra1 - this.extra2) *
                     (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot / this.finalSecondTeamValueEval
                 } else {
                   player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot
@@ -398,7 +402,7 @@ export class ToolService {
               player => {
                 player.finalValue = (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot + (-this.finalSecondTeamValue - this.bonus1 - this.repaid1 +
                   this.finalFirstTeamValue + this.bonus2 + this.repaid2) * (player.value < player.finalValue ? player.finalValue : player.value) / player.quot * player.finalQuot /
-                  this.finalSecondTeamValueEval
+                  this.finalSecondTeamValueEval * (player.repaid === 'yes' ? +player.contractLength / 12 : 1)
               }
             )
           }
@@ -416,7 +420,7 @@ export class ToolService {
     } else {
       players.forEach(
         (player, index) => {
-          player.finalValue = player.value + (teamSmallerValue + teamBiggerBonus - teamBiggerValue + teamSmallerBonus) * bonusSequence[index] / teamBiggerBonus, player.id
+          player.finalValue = player.value + (teamSmallerValue + teamBiggerBonus - teamBiggerValue + teamSmallerBonus) * bonusSequence[index] / teamBiggerBonus
         }
       )
       return players
@@ -442,7 +446,7 @@ export class ToolService {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
               (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
               (player.value / (teamSmallerValue - teamSmallerExtra) * 0.8 * (+player.contractLength / 12))
-          } else if (player.repaid === 'no' && player.contractType === 'lendR') {
+          } else if (player.contractType === 'lendR') {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
               (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
               (player.value / (teamSmallerValue - teamSmallerExtra) * (+player.contractLength / 12))
