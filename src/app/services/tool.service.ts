@@ -84,7 +84,7 @@ export class ToolService {
       player => {
         if (player.contractType === 'lend' || (player.contractType === 'lendR' && player.repaid === "no")) {
           this.firstTeamValue += +player.value * (+player.contractLength / 12) * 0.8
-        } else if (player.contractType === 'lendR') {
+        } else if (player.contractType === 'lendR' || player.contractType === 'lendO') {
           this.firstTeamValue += +player.value * (+player.contractLength / 12)
         }
         else {
@@ -107,9 +107,9 @@ export class ToolService {
 
     this.secondTeam.forEach(
       player => {
-        if (player.contractType === 'lend'|| (player.contractType === 'lendR' && player.repaid === "no")) {
+        if (player.contractType === 'lend' || (player.contractType === 'lendR' && player.repaid === "no")) {
           this.secondTeamValue += +player.value * (+player.contractLength / 12) * 0.8
-        } else if (player.contractType === 'lendR') {
+        } else if (player.contractType === 'lendR' || player.contractType === 'lendO') {
           this.secondTeamValue += +player.value * (+player.contractLength / 12)
         }
         else {
@@ -172,10 +172,10 @@ export class ToolService {
     if (this.repaid1 != 0 || this.repaid2 != 0) {
       this.finalFirstTeam.forEach(
         (player, index) => {
-          if (player.contractType === 'lend'|| (player.contractType === 'lendR' && player.repaid === "no")) {
+          if (player.contractType === 'lend' || (player.contractType === 'lendR' && player.repaid === "no")) {
             this.finalFirstTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8
             this.finalFirstTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8 / player.quot * player.finalQuot
-          } else if (player.contractType === 'lendR') {
+          } else if (player.contractType === 'lendR' || player.contractType === 'lendO') {
             this.finalFirstTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12)
             this.finalFirstTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) / player.quot * player.finalQuot
           }
@@ -187,10 +187,10 @@ export class ToolService {
       )
       this.finalSecondTeam.forEach(
         (player, index) => {
-          if (player.contractType === 'lend'|| (player.contractType === 'lendR' && player.repaid === "no")) {
+          if (player.contractType === 'lend' || (player.contractType === 'lendR' && player.repaid === "no")) {
             this.finalSecondTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8 / player.quot * player.finalQuot
             this.finalSecondTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) * 0.8
-          } else if (player.contractType === 'lendR') {
+          } else if (player.contractType === 'lendR' || player.contractType === 'lendO') {
             this.finalSecondTeamValue += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12)
             this.finalSecondTeamValueEval += (player.value < player.finalValue ? player.finalValue : player.value) * (+player.contractLength / 12) / player.quot * player.finalQuot
           } else {
@@ -446,7 +446,7 @@ export class ToolService {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
               (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
               (player.value / (teamSmallerValue - teamSmallerExtra) * 0.8 * (+player.contractLength / 12))
-          } else if (player.contractType === 'lendR') {
+          } else if (player.contractType === 'lendR' || player.contractType === 'lendO') {
             player.finalValue = (teamBiggerValue - teamSmallerExtra) * player.value /
               (teamSmallerValue - teamSmallerExtra) + (teamSmallerBonus - teamBiggerBonus) *
               (player.value / (teamSmallerValue - teamSmallerExtra) * (+player.contractLength / 12))

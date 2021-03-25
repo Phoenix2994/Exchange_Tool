@@ -1,0 +1,2 @@
+ng run app:build:production --base-href /Exchange_Tool/
+npx angular-cli-ghpages --dir=www
