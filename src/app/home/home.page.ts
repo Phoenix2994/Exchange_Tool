@@ -42,11 +42,11 @@ export class HomePage implements ViewWillEnter {
     this.firstTeamValues = []
     this.secondTeamValues = []
 
-    this.service.firstTeam.forEach(
+    this.service.team1.players.forEach(
       player =>
         this.firstTeam.push(player)
     )
-    this.service.secondTeam.forEach(
+    this.service.team2.players.forEach(
       player =>
         this.secondTeam.push(player)
     )
@@ -59,12 +59,12 @@ export class HomePage implements ViewWillEnter {
     }
     this.service.computeFinalValues()
 
-    this.service.finalFirstTeam.forEach(
+    this.service.team1.finalPlayers.forEach(
       player => {
         this.firstTeamValues.push(player)
       }
     )
-    this.service.finalSecondTeam.forEach(
+    this.service.team2.finalPlayers.forEach(
       player => {
         this.secondTeamValues.push(player)
       }
